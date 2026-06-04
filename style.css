@@ -1,0 +1,280 @@
+/* ================================
+   FONTS
+   We import two fonts from Google:
+   - Rajdhani: bold headings
+   - Source Serif 4: body text
+================================ */
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap');
+
+
+/* ================================
+   CSS VARIABLES
+   Think of these like named colors
+   we can reuse throughout the file.
+   Change one here, updates everywhere.
+================================ */
+:root {
+  --blue:       #0068b5;  /* Intel's main blue */
+  --light-blue: #00aeef;  /* Lighter blue for accents */
+  --dark-bg:    #0a0e1a;  /* Page background (very dark navy) */
+  --card-bg:    #111827;  /* Card background (dark grey) */
+  --border:     #1e2d45;  /* Subtle border color */
+  --text:       #e8edf5;  /* Main text (off-white) */
+  --text-muted: #7a90ab;  /* Dimmer text for descriptions */
+}
+
+
+/* ================================
+   RESET
+   Browsers add default spacing.
+   This removes it so we start fresh.
+================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Makes sizing more predictable */
+}
+
+
+/* ================================
+   PAGE / BODY
+================================ */
+body {
+  font-family: 'Source Serif 4', Georgia, serif;
+  background-color: var(--dark-bg);
+  color: var(--text);
+  min-height: 100vh; /* Page is at least as tall as the screen */
+}
+
+/* A faint blue grid pattern drawn over the background */
+body::before {
+  content: '';          /* Required for ::before to appear */
+  position: fixed;      /* Stays in place when you scroll */
+  inset: 0;             /* Covers the entire screen */
+  background-image:
+    linear-gradient(rgba(0, 104, 181, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 104, 181, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none; /* Clicks pass through it */
+}
+
+
+/* ================================
+   HEADER
+================================ */
+header {
+  padding: 80px 40px 60px;
+  text-align: center;
+
+  /* Faint blue glow that fades into the dark background */
+  background: linear-gradient(
+    180deg,
+    rgba(0, 104, 181, 0.18) 0%,
+    transparent 100%
+  );
+
+  border-bottom: 1px solid var(--border);
+}
+
+/* Intel logo image */
+header img {
+  width: 100px;
+  margin-bottom: 28px;
+  filter: brightness(0) invert(1); /* Turns the logo white */
+}
+
+/* Main page title */
+header h1 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 52px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 20px;
+}
+
+/* Blue underline beneath the title */
+header h1::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: var(--light-blue);
+  margin: 14px auto 0; /* Centers the underline */
+}
+
+/* Subtitle paragraph */
+header p {
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--text-muted);
+  max-width: 520px;      /* Stops the text getting too wide */
+  margin: 0 auto;        /* Centers it horizontally */
+  line-height: 1.7;
+}
+
+
+/* ================================
+   TIMELINE CARD ROW
+   This is the scrollable row of cards.
+================================ */
+section {
+  display: flex;        /* Lay children out in a row */
+  flex-wrap: nowrap;    /* Never wrap onto a new line */
+  gap: 20px;            /* Space between each card */
+
+  /* Show exactly 4 cards: (4 x 280px cards) + (3 x 20px gaps) + (2 x 40px padding) */
+  max-width: calc(4 * 280px + 3 * 20px + 80px);
+  margin: 0 auto;       /* Center the row on the page */
+  padding: 60px 40px 40px;
+
+  overflow-x: auto;           /* Enable horizontal scrolling */
+  scroll-snap-type: x mandatory; /* Scroll snaps to each card */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+
+  /* Style the scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: var(--blue) var(--card-bg);
+}
+
+/* Scrollbar styles for Chrome/Safari */
+section::-webkit-scrollbar        { height: 5px; }
+section::-webkit-scrollbar-track  { background: var(--card-bg); border-radius: 10px; }
+section::-webkit-scrollbar-thumb  { background: var(--blue);    border-radius: 10px; }
+
+
+/* ================================
+   INDIVIDUAL CARD
+================================ */
+section > div {
+  width: 300px;       /* was 280px */
+  flex-shrink: 0;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+  scroll-snap-align: start;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Blue bar that appears at the top of the card on hover */
+section > div::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--blue), var(--light-blue));
+  opacity: 0;           /* Hidden by default */
+  transition: opacity 0.3s ease;
+}
+
+/* Overlay hidden by default */
+section > div .overlay {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);  /* Dark transparent background */
+  color: var(--text);
+  padding: 24px;
+  font-size: 14px;
+  line-height: 1.75;
+  border-radius: 12px;
+}
+
+/* Show overlay on hover */
+section > div:hover .overlay {
+  display: block;
+}
+
+/* When hovering a card... */
+section > div:hover {
+  transform: translateY(-6px);          /* Lift it up */
+  border-color: var(--blue);            /* Blue border */
+  box-shadow: 0 12px 40px rgba(0, 104, 181, 0.2); /* Blue glow below */
+}
+
+/* ...also show the top blue bar */
+section > div:hover::before {
+  opacity: 1;
+}
+
+/* Year number e.g. "1968" */
+section > div h2 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--blue);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+/* Milestone title e.g. "Intel Founded" */
+section > div h3 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--light-blue);
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border); /* Divider line below the title */
+}
+
+/* ================================
+   HINT TEXT
+   The "Scroll to view..." line
+   at the bottom of the page.
+================================ */
+body > p {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0 0 48px;
+  opacity: 0.6;
+}
+
+
+/* ================================
+   SMALL SCREENS (mobile)
+   When the screen is 680px or less,
+   adjust sizes to fit.
+================================ */
+@media (max-width: 680px) {
+  header {
+    padding: 48px 24px 40px;
+  }
+
+  header h1 {
+    font-size: 32px;
+  }
+
+  section {
+    flex-direction: column;   /* Stack cards vertically */
+    align-items: center;
+    overflow-x: visible;      /* No horizontal scrolling needed */
+    max-width: 100%;
+    padding: 40px 20px 32px;
+  }
+
+  section > div {
+    width: 100%;              /* Cards stretch to fill the screen */
+    max-width: 420px;         /* But don't get too wide */
+  }
+}
+
+section > div img {
+  width: 100%;
+  height: 170px;           /* lets the image set its own height */
+  object-fit: contain;
+  border-radius: 6px;
+  display: block;
+}
