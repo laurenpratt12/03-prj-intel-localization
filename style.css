@@ -118,8 +118,9 @@ header p {
 /* ================================
    TIMELINE CARD ROW
    This is the scrollable row of cards.
+   Target only the timeline section so Bootstrap rows are unaffected.
 ================================ */
-section {
+section.timeline {
   display: flex;        /* Lay children out in a row */
   flex-wrap: nowrap;    /* Never wrap onto a new line */
   gap: 20px;            /* Space between each card */
@@ -139,15 +140,16 @@ section {
 }
 
 /* Scrollbar styles for Chrome/Safari */
-section::-webkit-scrollbar        { height: 5px; }
-section::-webkit-scrollbar-track  { background: var(--card-bg); border-radius: 10px; }
-section::-webkit-scrollbar-thumb  { background: var(--blue);    border-radius: 10px; }
+section.timeline::-webkit-scrollbar        { height: 5px; }
+section.timeline::-webkit-scrollbar-track  { background: var(--card-bg); border-radius: 10px; }
+section.timeline::-webkit-scrollbar-thumb  { background: var(--blue);    border-radius: 10px; }
 
 
 /* ================================
-   INDIVIDUAL CARD
+  INDIVIDUAL CARD
+  Target only the timeline cards
 ================================ */
-section > div {
+.timeline > div {
   width: 300px;       /* was 280px */
   flex-shrink: 0;
   background: var(--card-bg);
@@ -161,7 +163,7 @@ section > div {
 }
 
 /* Blue bar that appears at the top of the card on hover */
-section > div::before {
+.timeline > div::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
@@ -172,7 +174,7 @@ section > div::before {
 }
 
 /* Overlay hidden by default */
-section > div .overlay {
+.timeline > div .overlay {
   display: none;
   position: absolute;
   top: 0;
@@ -188,24 +190,24 @@ section > div .overlay {
 }
 
 /* Show overlay on hover */
-section > div:hover .overlay {
+.timeline > div:hover .overlay {
   display: block;
 }
 
 /* When hovering a card... */
-section > div:hover {
+.timeline > div:hover {
   transform: translateY(-6px);          /* Lift it up */
   border-color: var(--blue);            /* Blue border */
   box-shadow: 0 12px 40px rgba(0, 104, 181, 0.2); /* Blue glow below */
 }
 
 /* ...also show the top blue bar */
-section > div:hover::before {
+.timeline > div:hover::before {
   opacity: 1;
 }
 
 /* Year number e.g. "1968" */
-section > div h2 {
+.timeline > div h2 {
   font-family: 'Rajdhani', sans-serif;
   font-size: 42px;
   font-weight: 700;
@@ -215,7 +217,7 @@ section > div h2 {
 }
 
 /* Milestone title e.g. "Intel Founded" */
-section > div h3 {
+.timeline > div h3 {
   font-family: 'Rajdhani', sans-serif;
   font-size: 16px;
   font-weight: 500;
@@ -257,7 +259,7 @@ body > p {
     font-size: 32px;
   }
 
-  section {
+  section.timeline {
     flex-direction: column;   /* Stack cards vertically */
     align-items: center;
     overflow-x: visible;      /* No horizontal scrolling needed */
@@ -265,16 +267,109 @@ body > p {
     padding: 40px 20px 32px;
   }
 
-  section > div {
+  .timeline > div {
     width: 100%;              /* Cards stretch to fill the screen */
     max-width: 420px;         /* But don't get too wide */
   }
 }
 
-section > div img {
+.timeline > div img {
   width: 100%;
   height: 170px;           /* lets the image set its own height */
   object-fit: contain;
   border-radius: 6px;
   display: block;
 }
+
+
+/* ================================
+   INFO GRID (Bootstrap) STYLES
+   Styles for the new three-column section
+================================ */
+.info-section {
+  padding: 40px 20px 56px;
+}
+
+/* Make the rows behave like a responsive flex grid so items sit side-by-side */
+.info-section .row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 1.25rem; /* spacing between columns */
+}
+
+/* Default: full width (stacked) */
+.info-section .col-12 { width: 100%; }
+
+/* Medium screens: two columns */
+@media (min-width: 768px) {
+  .info-section .col-md-6 { width: calc(50% - 0.625rem); }
+}
+
+/* Large screens and up: three columns per row */
+@media (min-width: 992px) {
+  .info-section .col-lg-4 { width: calc(33.333333% - 0.833333rem); }
+}
+
+.info-section .h5 i {
+  color: var(--light-blue);
+}
+
+.newsletter-section {
+  background: rgba(17, 24, 39, 0.85);
+}
+
+.newsletter-section .card {
+  background: rgba(15, 23, 42, 0.95);
+}
+
+.newsletter-section .form-control {
+  background: #111827;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--text);
+}
+
+.newsletter-section .form-control:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 0.2rem rgba(0,104,181,0.18);
+}
+
+.site-footer {
+  background: #090d17;
+  text-align: center;
+}
+
+.site-footer a:hover {
+  color: var(--light-blue);
+}
+
+.site-footer .footer-nav {
+  justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.site-footer .footer-nav li {
+  display: inline-block;
+}
+
+.learn-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--light-blue);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: color 0.18s ease, border-color 0.18s ease, transform 0.12s ease;
+}
+
+.learn-more:hover {
+  color: var(--blue);
+  border-bottom-color: var(--blue);
+  transform: translateX(2px);
+}
+
+/* Ensure icons align nicely across LTR/RTL via Bootstrap utility classes */
+.info-section .me-2 { vertical-align: middle; }
